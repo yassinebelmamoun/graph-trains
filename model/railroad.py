@@ -19,8 +19,6 @@ class Railroad(Graph):
             4. Find the shortest route between two stations.
             5. Find the routes between two stations.
 
-        PS: Due to circularity issue that can lead to infinite number of routes between two stations, we decided to limit the exploration depth to 64.
-        Find more details in the description of the method: get_routes.
     """
 
 
@@ -44,11 +42,6 @@ class Railroad(Graph):
     def get_count_trips_ExactCountStop(self, departure, arrival, count_stop):
         # Return the count of trips from "departure" to "arrival" with a number of stops equal to count_stop 
         return len(self.get_trips_ExactCountStop(departure, arrival, count_stop))
-
-
-    def get_routes(self, departure, arrival, max_stop=10):
-        # Return the list of all routes from departure to arrival (max_stop <= sum of edges' weight)
-        return self.get_trips_MaxStop(departure, arrival, max_stop) 
     
 
     def get_length_shortest_route(self, departure, arrival):
@@ -56,7 +49,7 @@ class Railroad(Graph):
         # Testing with small values of max_depth is faster. (This is related to the cycles issues)
         max_depth, routes = 3, []
         while max_depth <= self.sum_edges_weight and not(routes):
-            routes = self.get_routes(departure, arrival, max_stop = max_depth)
+            routes = self.get_trips_MaxStop(departure, arrival, max_stop = max_depth)
             max_depth = max_depth * 2 if max_depth <= self.sum_edges_weight else self.sum_edges_weight
         return min([self.get_route_distance(route) for route in routes])
 
